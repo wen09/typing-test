@@ -1,0 +1,50 @@
+html{
+	background: rgb(255, 255, 255);
+}
+
+header{
+	background-color: rgb(255, 255, 255);
+	margin:0px;
+	padding: 0px;
+	border-bottom-style: outset;
+	/* border-radius: 10px; */
+	color: #E9E9E9;
+	text-align: left;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+nav ul li{
+	margin-right: 15px;
+	list-style-type: none;
+	display: inline-block;
+	text-align: left;
+	font-size: 20px;
+	padding: 0px;
+}
+
+nav ul li a{
+	text-decoration: none;
+	color: rgb(0, 0, 0);
+}
+
+main{
+	background-color: #E9E9E9;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 10px;
+	padding-left: 30px;
+	border-radius: 0px;
+	font-size: 15px;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+footer{
+	background-color: rgb(255, 255, 255);
+	margin:0px;
+	padding: 0px;
+	border-top-style: outset;
+	/* border-radius: 10px; */
+	color: #000000;
+	text-align: right;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
