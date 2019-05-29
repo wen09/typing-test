@@ -1,0 +1,165 @@
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+
+function MorphingCircle(x,y,radius){
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+
+    this.randAB = [0,0,0,0];
+    this.dAB = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxAB = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+    this.randCD = [0,0,0,0];
+    this.dCD = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxCD = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+
+    this.randA = [0,0,0,0];
+    this.dA = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxA = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+    this.randB = [0,0,0,0];
+    this.dB = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxB = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+    this.randC = [0,0,0,0];
+    this.dC = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxC = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+    this.randD = [0,0,0,0];
+    this.dD = [Math.random()-0.5,Math.random()-0.5,Math.random()-0.5,Math.random()-0.5];
+    this.maxD = [Math.random()*20+5,Math.random()*20+5,Math.random()*20+5,Math.random()*20+5];
+    // this.randA1X = 1;
+    // this.randA1Y = 1;
+    // this.randA2X = 1;
+    // this.randA2Y =1;
+    // this.dA1X = Math.random()-0.5;
+    // this.maxA1X = Math.random()*20+5;
+    // this.dA1Y = Math.random()-0.5;
+    // this.maxA1Y = Math.random()*20+5;
+    // this.dA2X = Math.random()-0.5;
+    // this.maxA2X = Math.random()*20+5;
+    // this.dA2Y = Math.random()-0.5;
+    // this.maxA2Y = Math.random()*20+5;
+
+    this.draw = function(){
+        ctx.lineWidth = 4;
+        // ctx.strokeStyle = "#333";
+        
+        ctx.beginPath();
+
+        // ctx.moveTo(this.x-this.radius+this.randAB[0],this.y+this.randAB[1]);
+        // ctx.bezierCurveTo(this.x-this.radius+this.randA[0],this.y+this.randA[1],this.x-this.radius+this.randA[2],this.y-this.radius+this.randA[3],this.x+this.randAB[2], this.y-this.radius+this.randAB[3], this.x+this.radius/4+this.randB[0], this.y-this.radius+this.randB[1], this.x+this.radius+this.randB[2], this.y-this.radius*3/4+this.randB[3], this.x+this.radius+this.randCD[0], this.y+this.randCD[1], this.x+this.radius+this.randC[0], this.y+this.radius/2+this.randC[1], this.x+this.radius/2+this.randC[2], this.y+this.radius+this.randC[3], this.x+this.randCD[2], this.y+this.radius+this.randCD[3], this.x-this.radius/2+this.randD[0], this.y+this.radius+this.randD[1], this.x-this.radius+this.randD[2], this.y+this.radius/2 +this.randD[3], this.x-this.radius+this.randAB[0], this.y+this.randAB[1]);
+        
+        //part a
+        ctx.moveTo(this.x-this.radius+this.randAB[0],this.y+this.randAB[1]);
+        ctx.bezierCurveTo(this.x-this.radius+this.randA[0],this.y+this.randA[1],this.x-this.radius+this.randA[2],this.y-this.radius+this.randA[3],this.x+this.randAB[2], this.y-this.radius+this.randAB[3]);
+        // ctx.moveTo(this.x-this.radius+this.randAB[0],this.y+this.randAB[1]);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.lineTo(this.x+this.randAB[2], this.y-this.radius+this.randAB[3]);
+        // ctx.fill();
+        //part b
+        ctx.moveTo(this.x+this.randAB[2], this.y-this.radius+this.randAB[3]);
+        ctx.bezierCurveTo(this.x+this.radius/4+this.randB[0], this.y-this.radius+this.randB[1], this.x+this.radius+this.randB[2], this.y-this.radius*3/4+this.randB[3], this.x+this.radius+this.randCD[0], this.y+this.randCD[1]);
+        // ctx.moveTo(this.x+this.randAB[2], this.y-this.radius+this.randAB[3]);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.lineTo(this.x+this.radius, this.y);
+        // ctx.fill();
+        //part c
+        ctx.moveTo(this.x+this.radius+this.randCD[0], this.y+this.randCD[1]);
+        ctx.bezierCurveTo(this.x+this.radius+this.randC[0], this.y+this.radius/2+this.randC[1], this.x+this.radius/2+this.randC[2], this.y+this.radius+this.randC[3], this.x+this.randCD[2], this.y+this.radius+this.randCD[3]);
+        // ctx.moveTo(this.x+this.radius, this.y);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.lineTo(this.x, this.y+this.radius);
+        // ctx.fill();
+        //part d
+        ctx.moveTo(this.x+this.randCD[2], this.y+this.radius+this.randCD[3]);
+        ctx.bezierCurveTo(this.x-this.radius/2+this.randD[0], this.y+this.radius+this.randD[1], this.x-this.radius+this.randD[2], this.y+this.radius/2 +this.randD[3], this.x-this.radius+this.randAB[0], this.y+this.randAB[1]);
+        // ctx.moveTo(this.x, this.y+this.radius);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.lineTo(this.x-this.radius, this.y);
+        
+        // ctx.fill();
+        ctx.stroke();
+
+        // ctx.beginPath();
+        // ctx.arc(500, 200, 100, Math.PI/ind, -Math.PI/ind);
+        // ctx.stroke();
+        // ctx.beginPath();
+        // ctx.arc(500, 200, 100, -Math.PI/ind, -Math.PI/ind);
+        // ctx.stroke();
+    }
+
+    this.update = function(){
+        this.draw();
+
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randAB[i]) > this.maxAB[i])
+                this.dAB[i] = -this.dAB[i];
+            this.maxAB[i] -= 0.01;
+            this.randAB[i]  -= this.dAB[i];
+        }
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randCD[i]) > this.maxCD[i])
+                this.dCD[i] = -this.dCD[i];
+            this.maxCD[i] -= 0.01;
+            this.randCD[i]  -= this.dCD[i];
+        }
+
+
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randA[i]) > this.maxA[i])
+                this.dA[i] = -this.dA[i];
+            this.maxA[i] -= 0.01;
+            this.randA[i]  -= this.dA[i];
+        }
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randB[i]) > this.maxB[i])
+                this.dB[i] = -this.dB[i];
+            this.maxB[i] -= 0.01;
+            this.randB[i]  -= this.dB[i];
+        }
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randC[i]) > this.maxC[i])
+                this.dC[i] = -this.dC[i];
+            this.maxC[i] -= 0.01;
+            this.randC[i]  -= this.dC[i];
+        }
+        for(var i = 0; i < 4; i++){
+            if(Math.abs(this.randD[i]) > this.maxD[i])
+                this.dD[i] = -this.dD[i];
+            this.maxD[i] -= 0.01;
+            this.randD[i]  -= this.dD[i];
+        }
+        // if(Math.abs(this.randA[0]) > this.maxA[0])
+        //     this.dA[0] = -this.dA[0];
+        // this.maxA[0] -= 0.01;
+        // this.randA[0]  -= this.dA[0];
+        // if(Math.abs(this.randA[1]) > this.maxA[1])
+        //     this.dA[1] = -this.dA[1];
+        // this.maxA[1] -= 0.01;
+        // this.randA[1]  -= this.dA[1];
+        // if(Math.abs(this.randA[2]) > this.maxA[2])
+        //     this.dA[2] = -this.dA[2];
+        // this.maxA[2] -= 0.01;
+        // this.randA[2]  -= this.dA[2];
+        // if(Math.abs(this.randA[3]) > this.maxA[3])
+        //     this.dA[3] = -this.dA[3];
+        // this.maxA[3] -= 0.01;
+        // this.randA[3]  -= this.dA[3];
+
+    }
+}
+
+var circle1 = new MorphingCircle ( 500, 200, 100);
+// var circle2 = new MorphingCircle ( 500, 200, 100);
+// var circle3 = new MorphingCircle ( 500, 200, 100);
+// var circle4 = new MorphingCircle ( 500, 200, 100);
+circle1.draw();
+var x = 100;
+function animation(){
+    requestAnimationFrame(animation);
+    ctx.clearRect(0,0,2000, 1000);
+    circle1.update();
+    // circle2.update();
+    // circle3.update();
+    // circle4.update();
+}
+
+// animation();
