@@ -1,11 +1,25 @@
 //music list mouse hover
-//play music
+//add music
 //click to next page
 
 var canvas = document.querySelector('canvas');
-var music = [[document.querySelector('audio:nth-child(1)'), 10]
+var music = [[document.querySelector('audio:nth-child(1)'), 10],
+             [document.querySelector('audio:nth-child(2)'), 0],
+             [document.querySelector('audio:nth-child(3)'), 10],
+             [document.querySelector('audio:nth-child(4)'), 10],
+             [document.querySelector('audio:nth-child(5)'), 10],
+             [document.querySelector('audio:nth-child(6)'), 10],
+             [document.querySelector('audio:nth-child(7)'), 68],
+             [document.querySelector('audio:nth-child(8)'), 10],
+             [document.querySelector('audio:nth-child(9)'), 10],
+             [document.querySelector('audio:nth-child(10)'), 10],
+             [document.querySelector('audio:nth-child(11)'), 10]
             ];
 var ctx = canvas.getContext('2d');
+
+for(var i = 0; i < 11; i++){
+    music[i][0].currentTime = music[i][1];
+}
 
 ctx.canvas.width  = 2000;
 ctx.canvas.height = 1000;
@@ -19,17 +33,17 @@ var mouse = {
     y: undefined
 }
 var fileList = [
-    ["epic", "test.mp3", "artist", "3:45"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
-    ["classic", "classic.mp3", "a", "10:00"],
+    ["Epic", "Disappear.mp3", "Two Steps From Hell", "2:59"],
+    ["Epic", "Evergreen.mp3", "Two Steps From Hell", "3:02"],
+    ["Classic", "He's a Pirate.mp3", "Klaus Badelt", "1:30"],
+    ["EDM", "All Time Low.mp3", "Jon Bellion", "3:41"],
+    ["J-Pop", "Lemon.mp3", "米津玄師", "4:10"],
+    ["EDM", "Jack Sparrow.mp3", "Nigtcore", "3:01"],
+    ["Remix", "East of Eden (Matstubs Remix).mp3", "Zella Day", "3:24"],
+    ["Remix", "Castle Of Glass (M. Shinoda Remix).mp3", "Linkin Park", "6:21"],
+    ["Alternative", "Strange.mp3", "Strange", "3:17"],
+    ["Alternative", "Believer.mp3", "Imagine Dragons", "3:22"],
+    ["Alternative", "Radioactive.mp3", "Imagine Dragons", "3:07"]
 ];
 var marginErrorHl = 250;
 var marginErrorHr = 400;
@@ -95,7 +109,7 @@ function SelectList(){
         for(var i = 0; i < 4; i++){
             ctx.fillText(fileList[ind][0], x+20, y+50);
             ctx.fillText(fileList[ind][1], x+250, y+50);
-            ctx.fillText(fileList[ind][2], x+1350, y+50);
+            ctx.fillText(fileList[ind][2], x+1250, y+50);
             ctx.fillText(fileList[ind][3], x+1650, y+50);
         }
     }
@@ -114,8 +128,11 @@ function SelectList(){
                 var ind = Math.floor(temp);
                 this.roundedRect(100,position[ind]);
                 this.selectedText(100,position[ind], ind);
-                music[ind].currentTime = music[ind][1];
                 music[ind][0].play(); 
+                for(var i = 0; i < 11; i++){
+                    if(i != ind)
+                        music[i][0].pause();
+                }
                 // ctx.fillRect(100,y,1800,70);
                 // ctx.strokeRect(100,y,1800,70);
             }
@@ -261,7 +278,7 @@ function StartScreen(){
             ctx.textAlign = "left";
             ctx.fillText(fileList[row][0], x+20, y+50+row*70);
             ctx.fillText(fileList[row][1], x+250, y+50+row*70);
-            ctx.fillText(fileList[row][2], x+1350, y+50+row*70);
+            ctx.fillText(fileList[row][2], x+1250, y+50+row*70);
             ctx.fillText(fileList[row][3], x+1650, y+50+row*70);
         }
         
