@@ -1,19 +1,17 @@
-//music list mouse hover
-//add music
-//click to next page
+//actual game play!!!
 
 var canvas = document.querySelector('canvas');
-var music = [[document.querySelector('audio:nth-child(1)'), 10],
+var music = [[document.querySelector('audio:nth-child(1)'), 0],
              [document.querySelector('audio:nth-child(2)'), 0],
-             [document.querySelector('audio:nth-child(3)'), 10],
-             [document.querySelector('audio:nth-child(4)'), 10],
-             [document.querySelector('audio:nth-child(5)'), 10],
-             [document.querySelector('audio:nth-child(6)'), 10],
-             [document.querySelector('audio:nth-child(7)'), 68],
-             [document.querySelector('audio:nth-child(8)'), 10],
-             [document.querySelector('audio:nth-child(9)'), 10],
-             [document.querySelector('audio:nth-child(10)'), 10],
-             [document.querySelector('audio:nth-child(11)'), 10]
+             [document.querySelector('audio:nth-child(3)'), 3],
+             [document.querySelector('audio:nth-child(4)'), 0],
+             [document.querySelector('audio:nth-child(5)'), 50],
+             [document.querySelector('audio:nth-child(6)'), 0],
+             [document.querySelector('audio:nth-child(7)'), 25],
+             [document.querySelector('audio:nth-child(8)'), 137],
+             [document.querySelector('audio:nth-child(9)'), 0],
+             [document.querySelector('audio:nth-child(10)'), 0],
+             [document.querySelector('audio:nth-child(11)'), 55.5]
             ];
 var ctx = canvas.getContext('2d');
 
@@ -36,8 +34,8 @@ var fileList = [
     ["Epic", "Disappear.mp3", "Two Steps From Hell", "2:59"],
     ["Epic", "Evergreen.mp3", "Two Steps From Hell", "3:02"],
     ["Classic", "He's a Pirate.mp3", "Klaus Badelt", "1:30"],
-    ["EDM", "All Time Low.mp3", "Jon Bellion", "3:41"],
     ["J-Pop", "Lemon.mp3", "米津玄師", "4:10"],
+    ["EDM", "All Time Low.mp3", "Jon Bellion", "3:41"],
     ["EDM", "Jack Sparrow.mp3", "Nigtcore", "3:01"],
     ["Remix", "East of Eden (Matstubs Remix).mp3", "Zella Day", "3:24"],
     ["Remix", "Castle Of Glass (M. Shinoda Remix).mp3", "Linkin Park", "6:21"],
@@ -45,6 +43,7 @@ var fileList = [
     ["Alternative", "Believer.mp3", "Imagine Dragons", "3:22"],
     ["Alternative", "Radioactive.mp3", "Imagine Dragons", "3:07"]
 ];
+var bgm = 0;
 var marginErrorHl = 250;
 var marginErrorHr = 400;
 var marginErrorVl = 60;
@@ -52,6 +51,10 @@ var marginErrorVr = 270;
 var playButtonx = 1000;
 var playButtony = 500;
 var playButtonRadius = 200;
+var listXl = 100;
+var listXr = listXl+1800;
+var listYt = 150;
+var listYb = listYt+400;
 
 function click(event){
     x = event.clientX;
@@ -60,85 +63,27 @@ function click(event){
         if(x>playButtonx-playButtonRadius-marginErrorHl && x<playButtonx+playButtonRadius-marginErrorHr 
             && y>playButtony-playButtonRadius-marginErrorVl && y<playButtony+playButtonRadius-marginErrorVr)
             play = 1;
-    }
-    // }else if(play == 1){
-
-    // }
-}
-function mouseCoord(event){
-    mouse.x = event.clientX;
-    mouse.y = event.clientY; 
-}
-function SelectList(){
-    this.roundedRect = function(x,y){
-        var radius = 20;
-        ctx.fillStyle = "rgb(235, 137, 33)";
-        ctx.strokeStyle = "rgb(235, 137, 33)";
-        ctx.beginPath();
-        ctx.arc(x+radius,y+radius,radius,Math.PI,Math.PI*1.5, false);
-        ctx.moveTo(x+radius, y);
-        ctx.lineTo(x+1800-radius, y);
-        ctx.fill();
-        ctx.moveTo(x, y+radius+1);
-        ctx.lineTo(x+radius, y+radius+1);
-        ctx.lineTo(x+radius, y);
-        ctx.lineTo(x, y+radius+1);
-        ctx.fill();
-        ctx.arc(x+1800-radius, y+radius, radius, Math.PI*1.5, 0, false);
-        ctx.moveTo(x+1800, y+radius);
-        ctx.lineTo(x+1800, y+70-radius);
-        ctx.fill();
-        ctx.moveTo(x+1800, y+radius);
-        ctx.lineTo(x+1800-radius, y+radius);
-        ctx.lineTo(x+1800-radius, y+70);
-        ctx.lineTo(x+1800, y+70-radius);
-        ctx.fill();
-        ctx.arc(x+1800-radius, y+70-radius, radius, 0, Math.PI*0.5, false);
-        ctx.moveTo(x+1800-radius, y+70);
-        ctx.lineTo(x+radius, y+70);
-        ctx.fill();
-        ctx.arc(x+radius, y+70-radius, radius, Math.PI*0.5, Math.PI, false);
-        ctx.lineTo(x, y+70-radius);
-        ctx.lineTo(x, y+radius);
-        ctx.fill();
-        ctx.fillRect(x+radius, y+radius, 1800-radius*2, 70-radius);
-        ctx.fillRect(x+radius, y, 1800-radius*2, 70-radius);
-    }
-    this.selectedText = function(x,y, ind){
-        ctx.fillStyle = "white";
-        for(var i = 0; i < 4; i++){
-            ctx.fillText(fileList[ind][0], x+20, y+50);
-            ctx.fillText(fileList[ind][1], x+250, y+50);
-            ctx.fillText(fileList[ind][2], x+1250, y+50);
-            ctx.fillText(fileList[ind][3], x+1650, y+50);
-        }
-    }
-    this.showSelected = function(){
-        var listXl = 100;
-        var listXr = listXl+1800;
-        var listYt = 150;
-        var listYb = listYt+400;
-
-        var position = [150, 220, 290, 360, 430, 500, 570, 640, 710, 780, 850];
+    }else if(play == 1){
         if(mouse.x > listXl+30 && mouse.x < listXr-690){
             if(mouse.y > listYt+5 && mouse.y < listYb){
                 var diffY = listYb-listYt-10;
                 var boxH = diffY/11;
                 var temp = (mouse.y-listYt-10)/boxH;
-                var ind = Math.floor(temp);
-                this.roundedRect(100,position[ind]);
-                this.selectedText(100,position[ind], ind);
-                music[ind][0].play(); 
-                for(var i = 0; i < 11; i++){
-                    if(i != ind)
-                        music[i][0].pause();
-                }
-                // ctx.fillRect(100,y,1800,70);
-                // ctx.strokeRect(100,y,1800,70);
+                bgm = Math.floor(temp);
+                play = 2;
             }
         }
+    }else if(play == 2){
+        if(x>playButtonx-playButtonRadius-marginErrorHl && x<playButtonx+playButtonRadius-marginErrorHr 
+            && y>playButtony-playButtonRadius-marginErrorVl && y<playButtony+playButtonRadius-marginErrorVr)
+            play = 3;
     }
 }
+function mouseCoord(event){
+    mouse.x = event.clientX;
+    mouse.y = event.clientY; 
+}
+
 //start button
 function MorphingCircle(x,y,radius){
     this.x = x;
@@ -284,13 +229,89 @@ function StartScreen(){
         
     }
 }
+function SelectList(){
+    this.roundedRect = function(x,y){
+        var radius = 20;
+        ctx.fillStyle = "rgb(235, 137, 33)";
+        ctx.strokeStyle = "rgb(235, 137, 33)";
+        ctx.beginPath();
+        ctx.arc(x+radius,y+radius,radius,Math.PI,Math.PI*1.5, false);
+        ctx.moveTo(x+radius, y);
+        ctx.lineTo(x+1800-radius, y);
+        ctx.fill();
+        ctx.moveTo(x, y+radius+1);
+        ctx.lineTo(x+radius, y+radius+1);
+        ctx.lineTo(x+radius, y);
+        ctx.lineTo(x, y+radius+1);
+        ctx.fill();
+        ctx.arc(x+1800-radius, y+radius, radius, Math.PI*1.5, 0, false);
+        ctx.moveTo(x+1800, y+radius);
+        ctx.lineTo(x+1800, y+70-radius);
+        ctx.fill();
+        ctx.moveTo(x+1800, y+radius);
+        ctx.lineTo(x+1800-radius, y+radius);
+        ctx.lineTo(x+1800-radius, y+70);
+        ctx.lineTo(x+1800, y+70-radius);
+        ctx.fill();
+        ctx.arc(x+1800-radius, y+70-radius, radius, 0, Math.PI*0.5, false);
+        ctx.moveTo(x+1800-radius, y+70);
+        ctx.lineTo(x+radius, y+70);
+        ctx.fill();
+        ctx.arc(x+radius, y+70-radius, radius, Math.PI*0.5, Math.PI, false);
+        ctx.lineTo(x, y+70-radius);
+        ctx.lineTo(x, y+radius);
+        ctx.fill();
+        ctx.fillRect(x+radius, y+radius, 1800-radius*2, 70-radius);
+        ctx.fillRect(x+radius, y, 1800-radius*2, 70-radius);
+    }
+    this.reset = function(ind){
+        music[ind][0].currentTime = 0;
+        for(var i = 0; i < 11; i++){
+            music[i][0].pause();
+        }
+    }
+    this.selectedText = function(x,y, ind){
+        ctx.fillStyle = "white";
+        for(var i = 0; i < 4; i++){
+            ctx.fillText(fileList[ind][0], x+20, y+50);
+            ctx.fillText(fileList[ind][1], x+250, y+50);
+            ctx.fillText(fileList[ind][2], x+1250, y+50);
+            ctx.fillText(fileList[ind][3], x+1650, y+50);
+        }
+    }
+    this.showSelected = function(){
+        var position = [150, 220, 290, 360, 430, 500, 570, 640, 710, 780, 850];
+        if(mouse.x > listXl+30 && mouse.x < listXr-690){
+            if(mouse.y > listYt+5 && mouse.y < listYb){
+                var diffY = listYb-listYt-10;
+                var boxH = diffY/11;
+                var temp = (mouse.y-listYt-10)/boxH;
+                var ind = Math.floor(temp);
+                this.roundedRect(100,position[ind]);
+                this.selectedText(100,position[ind], ind);
+                music[ind][0].play(); 
+                for(var i = 0; i < 11; i++){
+                    if(i != ind){
+                        music[i][0].pause();
+                        music[i][0].currentTime = music[i][1];
+                    }
+                }
+            }
+        }
+    }
+}
+function playButton(x,y){
+    ctx.font = "50px Comic Sans MS";
+    ctx.fillStyle = "rgb(235, 137, 33)";
+    ctx.textAlign = "center";
+    ctx.fillText("PLAY", x, y);
+}
+//game play
+
 
 var startButtonCircle = new MorphingCircle (playButtonx, playButtony, playButtonRadius);
 var musicList = new StartScreen();
-
 var selectList = new SelectList();
-
-// musicList.displayFile();
 
 function animation(){
     requestAnimationFrame(animation);
@@ -298,13 +319,16 @@ function animation(){
     if(play == 0){
         startButtonCircle.update();
         startButton(playButtonx, playButtony);
-        ctx.beginPath();
-        ctx.arc(playButtonx, playButtony, playButtonRadius, 0, 2 * Math.PI);
     }else if(play == 1){
         musicList.displayFile();
         selectList.showSelected();
+    }else if(play == 2){
+        selectList.reset(bgm);
+        startButtonCircle.update();
+        playButton(playButtonx, playButtony);
+    }else if(play == 3){
+        ctx.fillRect(0,0,100,100);
+        music[bgm][0].play();
     }
-    
-    
 }
 animation();
