@@ -24,7 +24,7 @@ ctx.canvas.height = 1000;
 canvas.addEventListener('mousedown', click, true);
 canvas.addEventListener('mousemove', mouseCoord, false);
 
-var play = 0;//start at 0
+var play = 3;//start at 0
 
 var mouse = {
     x: undefined,
@@ -307,14 +307,125 @@ function playButton(x,y){
     ctx.fillText("PLAY", x, y);
 }
 //game play
+function GamePlay(){
+    this.timer = 0; //set to 0
+    this.countDown = 3;
+    this.score = 0;
+    this.currentPosition = 1;
+    this.status = this.currentPosition;
+    // this.status = this.currentPosition/fileList[bdm][3];
+    this.wordX = 130;
+    this.wordY = 260;
+    this.index = this.timer-1;
+    this.time = function(){
+        console.log(this.timer);
+        if(this.countDown > 0){
+            ctx.fillText(this.countDown, 650, 150);
+            ctx.fillText("COUNTDOWN:", 350, 150);
+            this.countDown--;
+        }else{
+            ctx.fillText(this.timer, 500, 150);
+            ctx.fillText("START", 300, 150);
+            this.timer++;
+        }
+    }
+    this.sheetMusic = function(x,y){
+        ctx.strokeStyle = "rgb(114, 114, 114)";
+        var lineY = y;
+        for(var i = 0; i < 5; i++){
+            ctx.moveTo(x, lineY+i*20);
+            ctx.lineTo(x+1800, lineY+i*20);
+        }
+        ctx.stroke();
+    }
+    this.words = function(words){
+        ctx.font = "70px Comic Sans MS";
+        ctx.fillStyle = "rgb(235, 137, 33)";
+        ctx.textAlign = "center";
+        var x = 130;
+        var y = 260;
+        var ind = 0;
+        var row = 0;
+        var currentX;
+        var currentY;
+        for(var i = 0; i < words.length; i++){
+            currentX = x+60*ind;
+            currentY = y+150*row
+            if(currentX < 1900){
+                ctx.fillText(words.charAt(i), currentX, currentY);
+            }else{
+                row++;
+                ind = -1;
+                i -= 1;
+            }
+            ind++;
+        }
+    }
+    this.wordsAnimation = function(words){
+        ctx.font = "70px Comic Sans MS";
+        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.textAlign = "center";
 
+        if(this.wordX < 1850){
+            this.index += 1;
+            this.wordX = 130+60*(this.index);
+            ctx.fillText(words[this.timer-1], this.wordX, this.wordY);
+        }else{
+            this.wordY += 150;
+            this.wordX = 130;
+            this.index = 0;
+            ctx.fillText(words[this.timer-1], this.wordX, this.wordY);
+        }
+    }
+    this.cursor = function(){ //not for use
+        ctx.fillStyle = "rgba(235, 137, 33, 0.5)";
+        ctx.fillRect(this.cursorX,this.cursorY, 50, 80);
+    }
+    this.cursorAnimation = function(){ //not for use
+        this.cursor();
+        if(this.cursorX >= 1800){
+            this.cursorX = 130;
+            this.cursorY += 150;
+        }else{
+            this.cursorX = 130+80*(this.timer);
+        }
+    }
+    this.background = function(){
+        ctx.font = "40px Comic Sans MS";
+        ctx.fillStyle = "rgb(235, 137, 33)";
+        ctx.textAlign = "center";
+        ctx.fillText(this.status + "%", 1600, 120);
+        ctx.fillText("Score: " + this.score, 1800, 120);
+        var y = 200;
+        for(var i = 0; i < 5; i++){
+            this.sheetMusic(100, y+i*150);
+        }
+    }
+    this.update = function(words){
+        this.background();
+        this.words(words);
+        this.time();
+        if(this.timer > 0){
+            // this.cursorAnimation();
+            this.wordsAnimation(words);
+        }
+    }
+}
 
 var startButtonCircle = new MorphingCircle (playButtonx, playButtony, playButtonRadius);
 var musicList = new StartScreen();
 var selectList = new SelectList();
+var gamePlay = new GamePlay();
 
 function animation(){
+    if(play != 3)
     requestAnimationFrame(animation);
+    else{
+        setTimeout(function() {
+            requestAnimationFrame(animation);
+          }, 1000);
+    }
+    
     ctx.clearRect(0,0,2000, 1000);
     if(play == 0){
         startButtonCircle.update();
@@ -327,8 +438,8 @@ function animation(){
         startButtonCircle.update();
         playButton(playButtonx, playButtony);
     }else if(play == 3){
-        ctx.fillRect(0,0,100,100);
         music[bgm][0].play();
+        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890");
     }
 }
 animation();
