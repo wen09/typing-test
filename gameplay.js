@@ -57,6 +57,11 @@ var listXr = listXl + 1800;
 var listYt = 150;
 var listYb = listYt + 400;
 
+// Countdown timer (in seconds)
+var countdown = 0;
+// ID to track the setTimeout
+var id = null;
+
 function click(event) {
     x = event.clientX;
     y = event.clientY;
@@ -311,8 +316,7 @@ function playButton(x, y) {
 }
 //game play
 function GamePlay(){
-    this.timer = 0; //set to 0
-    this.countDown = 3;
+    this.timer = -3; //set to 0
     this.score = 0;
     this.currentPosition = 1;
     this.status = this.currentPosition;
@@ -320,16 +324,13 @@ function GamePlay(){
     this.wordX = 130;
     this.wordY = 260;
     this.index = this.timer-1;
-    this.time = function(){
-        console.log(this.timer);
-        if(this.countDown > 0){
-            ctx.fillText(this.countDown, 650, 150);
+    this.title = function(countDown){
+        if(countDown <= 0){
+            ctx.fillText(countDown, 650, 150);
             ctx.fillText("COUNTDOWN:", 350, 150);
-            this.countDown--;
         }else{
-            ctx.fillText(this.timer, 500, 150);
+            ctx.fillText(countDown, 500, 150);
             ctx.fillText("START", 300, 150);
-            this.timer++;
         }
     }
     this.sheetMusic = function(x,y){
@@ -341,9 +342,9 @@ function GamePlay(){
         }
         ctx.stroke();
     }
-    this.words = function(words){
+    this.words = function(words, timer){
         ctx.font = "70px Comic Sans MS";
-        ctx.fillStyle = "rgb(235, 137, 33)";
+        // ctx.fillStyle = "rgb(235, 137, 33)";
         ctx.textAlign = "center";
         var x = 130;
         var y = 260;
@@ -352,6 +353,10 @@ function GamePlay(){
         var currentX;
         var currentY;
         for(var i = 0; i < words.length; i++){
+            if(timer == i)
+                ctx.fillStyle = "rgb(0, 0, 0)";
+            else
+                ctx.fillStyle = "rgb(235, 137, 33)";
             currentX = x+60*ind;
             currentY = y+150*row
             if(currentX < 1900){
@@ -364,7 +369,7 @@ function GamePlay(){
             ind++;
         }
     }
-    this.wordsAnimation = function(words){
+    this.wordsAnimation = function(words){ //not for use
         ctx.font = "70px Comic Sans MS";
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.textAlign = "center";
@@ -404,13 +409,11 @@ function GamePlay(){
             this.sheetMusic(100, y+i*150);
         }
     }
-    this.update = function(words){
+    this.update = function(words, countDown){
         this.background();
-        this.words(words);
-        this.time();
-        if(this.timer > 0){
-            // this.cursorAnimation();
-            this.wordsAnimation(words);
+        gamePlay.title(countDown);
+        if(countDown >= 0){
+            this.words(words, countDown);
         }
     }
 }
@@ -418,26 +421,21 @@ function GamePlay(){
 var startButtonCircle = new MorphingCircle (playButtonx, playButtony, playButtonRadius);
 var musicList = new StartScreen();
 var selectList = new SelectList();
-var gamePlay = new GamePlay();
-
-// Countdown timer (in seconds)
-var countdown = 30;
-// ID to track the setTimeout
-var id = null;
+var gamePlay = new GamePlay(countdown);
 
 // Start the game
 function startGame() {
     // Reduce the countdown timer ever second
     id = setInterval(function () {
-        countdown--;
+        countdown++;
     }, 1000)
     animation();
 }
 
 // The main draw loop
-play = 0;
+play = 3;
 function animation(){
-    if (countdown <= 0) {
+    if (countdown < 0) {
         clearInterval(id);
         ctx.fillText('Time Remaining: ' + countdown, 100, 200);
       } else {
@@ -458,7 +456,7 @@ function animation(){
         playButton(playButtonx, playButtony);
     }else if(play == 3){
         music[bgm][0].play();
-        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890");
+        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890", countdown);
     }
 }
 
