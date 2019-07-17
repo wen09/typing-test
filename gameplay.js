@@ -23,14 +23,15 @@ ctx.canvas.width = 2000;
 ctx.canvas.height = 1000;
 canvas.addEventListener('mousedown', click, true);
 canvas.addEventListener('mousemove', mouseCoord, false);
-window.addEventListener('keypress', keyboardInput, false);
+window.addEventListener('keypress', keyboardInputTrue, false);
+// window.addEventListener('keyup', keyboardInputFalse, false);
 var play = 3;//start at 0
 
 var mouse = {
     x: undefined,
     y: undefined
 }
-var charValue;
+var charValue = {};
 var fileList = [
     ["Epic", "Disappear.mp3", "Two Steps From Hell", "2:59"],
     ["Epic", "Evergreen.mp3", "Two Steps From Hell", "3:02"],
@@ -89,9 +90,19 @@ function mouseCoord(event) {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
 }
-function keyboardInput(event) {
+function keyboardInputTrue(event) {
     input = event.char || event.keycode || event.which;
-    charValue = String.fromCharCode(input);
+    // charValue = String.fromCharCode(input);
+    charValue[input] = true;
+    console.log("keyboard input: "+charValue);
+    console.log("keyboard input: "+String.fromCharCode(input));
+}
+function keyboardInputFalse(event) {
+    input = event.keycode || event.which;
+    // charValue = String.fromCharCode(input);
+    charValue[input] = false;
+    console.log("keyboard input: "+charValue);
+    console.log("keyboard input: "+String.fromCharCode(input));
 }
 //start button
 function MorphingCircle(x, y, radius) {
@@ -318,6 +329,7 @@ function playButton(x, y) {
 function GamePlay(){
     this.timer = -3; //set to 0
     this.score = 0;
+    this.pre = 0;
     this.currentPosition = 1;
     this.status = this.currentPosition;
     // this.status = this.currentPosition/fileList[bdm][3];
@@ -342,9 +354,8 @@ function GamePlay(){
         }
         ctx.stroke();
     }
-    this.words = function(words, timer){
+    this.words = function(words, timer, keyInput){
         ctx.font = "70px Comic Sans MS";
-        // ctx.fillStyle = "rgb(235, 137, 33)";
         ctx.textAlign = "center";
         var x = 130;
         var y = 260;
@@ -352,10 +363,20 @@ function GamePlay(){
         var row = 0;
         var currentX;
         var currentY;
+        
         for(var i = 0; i < words.length; i++){
-            if(timer == i)
+            if(timer == i){
                 ctx.fillStyle = "rgb(0, 0, 0)";
-            else
+                // if(words.charAt(i) == keyInput){
+                if(keyInput[words.charAt(i).charCodeAt(0)]){
+                    // if(this.pre != this.score){
+                        this.score++;
+                        // this.pre++;
+                    // }
+                    ctx.fillStyle = "rgb(100, 100, 100)";
+                    console.log("CORRECT INPUT: "+keyInput);
+                }
+            }else
                 ctx.fillStyle = "rgb(235, 137, 33)";
             currentX = x+60*ind;
             currentY = y+150*row
@@ -369,7 +390,7 @@ function GamePlay(){
             ind++;
         }
     }
-    this.wordsAnimation = function(words){ //not for use
+    this.wordsAnimation = function(words){ //not for use, replaced by this.word
         ctx.font = "70px Comic Sans MS";
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.textAlign = "center";
@@ -385,11 +406,11 @@ function GamePlay(){
             ctx.fillText(words[this.timer-1], this.wordX, this.wordY);
         }
     }
-    this.cursor = function(){ //not for use
+    this.cursor = function(){ //not for use, replaced by this.word
         ctx.fillStyle = "rgba(235, 137, 33, 0.5)";
         ctx.fillRect(this.cursorX,this.cursorY, 50, 80);
     }
-    this.cursorAnimation = function(){ //not for use
+    this.cursorAnimation = function(){ //not for use, replaced by this.word
         this.cursor();
         if(this.cursorX >= 1800){
             this.cursorX = 130;
@@ -403,17 +424,18 @@ function GamePlay(){
         ctx.fillStyle = "rgb(235, 137, 33)";
         ctx.textAlign = "center";
         ctx.fillText(this.status + "%", 1600, 120);
-        ctx.fillText("Score: " + this.score, 1800, 120);
+        // ctx.fillText("Score: " + this.score, 1800, 120);
+        ctx.fillText("Score: " + this.score, 200, 120);
         var y = 200;
         for(var i = 0; i < 5; i++){
             this.sheetMusic(100, y+i*150);
         }
     }
-    this.update = function(words, countDown){
+    this.update = function(words, countDown, keyInput){
         this.background();
         gamePlay.title(countDown);
         if(countDown >= 0){
-            this.words(words, countDown);
+            this.words(words, countDown,keyInput);
         }
     }
 }
@@ -456,7 +478,7 @@ function animation(){
         playButton(playButtonx, playButtony);
     }else if(play == 3){
         music[bgm][0].play();
-        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890", countdown);
+        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890", countdown, charValue);
     }
 }
 
