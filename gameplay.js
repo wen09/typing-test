@@ -1,5 +1,3 @@
-// //actual game play!!!
-
 var canvas = document.querySelector('canvas');
 var music = [[document.querySelector('audio:nth-child(1)'), 0],
 [document.querySelector('audio:nth-child(2)'), 0],
@@ -15,6 +13,32 @@ var music = [[document.querySelector('audio:nth-child(1)'), 0],
 ];
 var ctx = canvas.getContext('2d');
 
+const body = document.querySelector('html');
+var backgroundColor;
+var mainButtonFill;
+var mainButtonStroke;
+var selectedBoxColor;
+var textColor;
+var wordColor;
+
+function theme(){
+    if (body.classList.contains('theme-light')) {
+        backgroundColor = "rgb(255, 255, 255)";
+        mainButtonFill = "rgba(235, 137, 33, 0.7)";
+        mainButtonStroke = "rgba(235, 137, 33, 0.1)";
+        selectedBoxColor = "rgb(235, 137, 33)";
+        textColor = "rgb(235, 137, 33)";
+        wordColor = "rgb(0, 0, 0)";
+    }else if(body.classList.contains('theme-dark')) {
+        backgroundColor = "rgb(32, 32, 31)";
+        mainButtonFill = "rgba(44, 44, 42, 0.7)";
+        mainButtonStroke = "rgba(44, 44, 42, 0.1)";
+        selectedBoxColor = "rgb(0, 0, 0)";
+        textColor = "rgb(0, 0, 0)";
+        wordColor = "rgb(114, 114, 114)";
+    }
+}
+
 for (var i = 0; i < 11; i++) {
     music[i][0].currentTime = music[i][1];
 }
@@ -25,7 +49,7 @@ canvas.addEventListener('mousedown', click, true);
 canvas.addEventListener('mousemove', mouseCoord, false);
 window.addEventListener('keypress', keyboardInputTrue, false);
 // window.addEventListener('keyup', keyboardInputFalse, false);
-var play = 3;//start at 0
+var play = 4;//start at 0
 
 var mouse = {
     x: undefined,
@@ -47,9 +71,9 @@ var fileList = [
 ];
 var bgm = 0;
 var marginErrorHl = 250;
-var marginErrorHr = 400;
+var marginErrorH2 = 400;
 var marginErrorVl = 60;
-var marginErrorVr = 270;
+var marginErrorV2 = 270;
 var playButtonx = 1000;
 var playButtony = 500;
 var playButtonRadius = 200;
@@ -57,6 +81,10 @@ var listXl = 100;
 var listXr = listXl + 1800;
 var listYt = 150;
 var listYb = listYt + 400;
+
+var backButtonx = 1300;
+var backButtony = 500;
+var backButtonRadius = 150;
 
 // Countdown timer (in seconds)
 var countdown = 0;
@@ -67,8 +95,8 @@ function click(event) {
     x = event.clientX;
     y = event.clientY;
     if (play == 0) {
-        if (x > playButtonx - playButtonRadius - marginErrorHl && x < playButtonx + playButtonRadius - marginErrorHr
-            && y > playButtony - playButtonRadius - marginErrorVl && y < playButtony + playButtonRadius - marginErrorVr)
+        if (x > playButtonx - playButtonRadius - marginErrorHl && x < playButtonx + playButtonRadius - marginErrorH2
+            && y > playButtony - playButtonRadius - marginErrorVl && y < playButtony + playButtonRadius - marginErrorV2)
             play = 1;
     } else if (play == 1) {
         if (mouse.x > listXl + 30 && mouse.x < listXr - 690) {
@@ -81,9 +109,13 @@ function click(event) {
             }
         }
     } else if (play == 2) {
-        if (x > playButtonx - playButtonRadius - marginErrorHl && x < playButtonx + playButtonRadius - marginErrorHr
-            && y > playButtony - playButtonRadius - marginErrorVl && y < playButtony + playButtonRadius - marginErrorVr)
+        if (x > playButtonx - playButtonRadius - marginErrorHl && x < playButtonx + playButtonRadius - marginErrorH2
+            && y > playButtony - playButtonRadius - marginErrorVl && y < playButtony + playButtonRadius - marginErrorV2)
             play = 3;
+    }else if (play == 4) {
+        if (x > backButtonx - backButtonRadius - 400 && x < backButtonx + backButtonRadius - 500 
+            && y > backButtony - backButtonRadius - 100 && y < backButtony + backButtonRadius - 235)
+            play = 0;
     }
 }
 function mouseCoord(event) {
@@ -136,8 +168,8 @@ function MorphingCircle(x, y, radius) {
     this.maxH = [Math.random() * 30, Math.random() * 30, Math.random() * 30, Math.random() * 30];
 
     this.draw = function () {
-        ctx.strokeStyle = "rgba(235, 137, 33, 0.1)";
-        ctx.fillStyle = "rgba(235, 137, 33, 0.7)";
+        ctx.strokeStyle = mainButtonStroke;
+        ctx.fillStyle = mainButtonFill;
         var points = [this.x - this.radius + this.randA[0], this.y + this.randA[1],
         this.x - this.radius * 4 / 5 + this.randB[0], this.y - this.radius * 4 / 5 + this.randB[1],
         this.x + this.randC[2], this.y - this.radius + this.randC[3],
@@ -216,21 +248,22 @@ function MorphingCircle(x, y, radius) {
 }
 function startButton(x, y) {
     ctx.font = "50px Comic Sans MS";
-    ctx.fillStyle = "rgb(235, 137, 33)";
+    ctx.fillStyle = textColor;
     ctx.textAlign = "center";
     ctx.fillText("START", x, y);
 }
 //start screen
 function StartScreen() {
     this.displayFile = function () {
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         var x = 100;
         var y = 150;
-
         ctx.font = "Bold 45px Comic Sans MS";
-        ctx.fillStyle = "rgb(235, 137, 33)";
+        ctx.fillStyle = textColor;
         ctx.fillText("HOVER TO LISTEN", 800, 100);
         for (var row = 0; row < fileList.length; row++) {
-            ctx.fillStyle = "rgb(255,255,255)";
+            ctx.fillStyle = backgroundColor;
             ctx.fillRect(x, y + row * 70, 1800, 70);
             ctx.strokeStyle = "rgb(150, 150, 150)";
             ctx.beginPath();
@@ -238,7 +271,7 @@ function StartScreen() {
             ctx.lineTo(x + 1800, y + (row + 1) * 70);
             ctx.stroke();
             ctx.font = "35px Comic Sans MS";
-            ctx.fillStyle = "rgb(235, 137, 33)";
+            ctx.fillStyle = textColor;
             ctx.textAlign = "left";
             ctx.fillText(fileList[row][0], x + 20, y + 50 + row * 70);
             ctx.fillText(fileList[row][1], x + 250, y + 50 + row * 70);
@@ -251,8 +284,8 @@ function StartScreen() {
 function SelectList() {
     this.roundedRect = function (x, y) {
         var radius = 20;
-        ctx.fillStyle = "rgb(235, 137, 33)";
-        ctx.strokeStyle = "rgb(235, 137, 33)";
+        ctx.fillStyle = selectedBoxColor;
+        ctx.strokeStyle = selectedBoxColor;
         ctx.beginPath();
         ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 1.5, false);
         ctx.moveTo(x + radius, y);
@@ -290,7 +323,7 @@ function SelectList() {
         }
     }
     this.selectedText = function (x, y, ind) {
-        ctx.fillStyle = "white";
+        ctx.fillStyle = backgroundColor;
         for (var i = 0; i < 4; i++) {
             ctx.fillText(fileList[ind][0], x + 20, y + 50);
             ctx.fillText(fileList[ind][1], x + 250, y + 50);
@@ -321,7 +354,7 @@ function SelectList() {
 }
 function playButton(x, y) {
     ctx.font = "50px Comic Sans MS";
-    ctx.fillStyle = "rgb(235, 137, 33)";
+    ctx.fillStyle = textColor;
     ctx.textAlign = "center";
     ctx.fillText("PLAY", x, y);
 }
@@ -366,7 +399,9 @@ function GamePlay(){
         
         for(var i = 0; i < words.length; i++){
             if(timer == i){
-                ctx.fillStyle = "rgb(0, 0, 0)";
+                ctx.fillStyle = wordColor;
+                if(words.charAt(i) == '-')
+                    play = 4;
                 // if(words.charAt(i) == keyInput){
                 if(keyInput[words.charAt(i).charCodeAt(0)]){
                     // if(this.pre != this.score){
@@ -377,7 +412,7 @@ function GamePlay(){
                     console.log("CORRECT INPUT: "+keyInput);
                 }
             }else
-                ctx.fillStyle = "rgb(235, 137, 33)";
+                ctx.fillStyle = textColor;
             currentX = x+60*ind;
             currentY = y+150*row
             if(currentX < 1900){
@@ -421,7 +456,7 @@ function GamePlay(){
     }
     this.background = function(){
         ctx.font = "40px Comic Sans MS";
-        ctx.fillStyle = "rgb(235, 137, 33)";
+        ctx.fillStyle = textColor;
         ctx.textAlign = "center";
         ctx.fillText(this.status + "%", 1600, 120);
         // ctx.fillText("Score: " + this.score, 1800, 120);
@@ -438,9 +473,24 @@ function GamePlay(){
             this.words(words, countDown,keyInput);
         }
     }
+    this.displayScore = function(){
+        ctx.font = "60px Comic Sans MS";
+        ctx.fillStyle = textColor;
+        ctx.textAlign = "left";
+        ctx.fillText("Your score:", 500, 400);
+        ctx.fillText("Score: " + this.score, 500, 500);
+    }
+}
+//end score
+function backButton(x, y) {
+    ctx.font = "50px Comic Sans MS";
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "center";
+    ctx.fillText("BACK", x, y);
 }
 
 var startButtonCircle = new MorphingCircle (playButtonx, playButtony, playButtonRadius);
+var backButtonCircle = new MorphingCircle (backButtonx, backButtony, backButtonRadius);
 var musicList = new StartScreen();
 var selectList = new SelectList();
 var gamePlay = new GamePlay(countdown);
@@ -455,16 +505,19 @@ function startGame() {
 }
 
 // The main draw loop
-play = 3;
+play = 0;
 function animation(){
     if (countdown < 0) {
         clearInterval(id);
         ctx.fillText('Time Remaining: ' + countdown, 100, 200);
-      } else {
+    } else {
         window.requestAnimationFrame(animation);
-      }
-
-    ctx.clearRect(0,0,2000, 1000);
+    }
+    
+    theme();
+    // ctx.clearRect(0,0,2000, 1000);
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillText('Time Remaining: ' + countdown, 100, 100);
     if(play == 0){
         startButtonCircle.update();
@@ -477,10 +530,19 @@ function animation(){
         startButtonCircle.update();
         playButton(playButtonx, playButtony);
     }else if(play == 3){
+        // countdown = 0;
         music[bgm][0].play();
-        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890", countdown, charValue);
+        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890-", countdown, charValue);
+    }else if(play == 4){
+        ctx.fillText('end', 100, 100);
+        music[bgm][0].pause();
+        backButtonCircle.update();
+        backButton(backButtonx, backButtony);
+        gamePlay.displayScore();
     }
+    // startGame();
 }
 
 // Start the game
 startGame();
+// animation();
