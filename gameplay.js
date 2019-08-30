@@ -1,4 +1,4 @@
-var canvas = document.querySelector('canvas');
+//music list with start time for stage 1
 var music = [[document.querySelector('audio:nth-child(1)'), 0],
 [document.querySelector('audio:nth-child(2)'), 0],
 [document.querySelector('audio:nth-child(3)'), 3],
@@ -11,16 +11,21 @@ var music = [[document.querySelector('audio:nth-child(1)'), 0],
 [document.querySelector('audio:nth-child(10)'), 0],
 [document.querySelector('audio:nth-child(11)'), 55.5]
 ];
-var ctx = canvas.getContext('2d');
 
+var canvas = document.querySelector('canvas');
+var paragraph = document.querySelector('.game');
+var currentWord = document.querySelector('.currentWord');
+var input = document.querySelector('.input');
+var scoreDes = document.querySelector('.score');
 const body = document.querySelector('html');
+
+//color theme
 var backgroundColor;
 var mainButtonFill;
 var mainButtonStroke;
 var selectedBoxColor;
 var textColor;
-var wordColor;
-
+var selectedWordColor;
 function theme(){
     if (body.classList.contains('theme-light')) {
         backgroundColor = "rgb(255, 255, 255)";
@@ -28,34 +33,32 @@ function theme(){
         mainButtonStroke = "rgba(235, 137, 33, 0.1)";
         selectedBoxColor = "rgb(235, 137, 33)";
         textColor = "rgb(235, 137, 33)";
-        wordColor = "rgb(0, 0, 0)";
+        selectedWordColor = "rgb(0, 0, 0)";
     }else if(body.classList.contains('theme-dark')) {
         backgroundColor = "rgb(32, 32, 31)";
         mainButtonFill = "rgba(44, 44, 42, 0.7)";
         mainButtonStroke = "rgba(44, 44, 42, 0.1)";
         selectedBoxColor = "rgb(0, 0, 0)";
         textColor = "rgb(0, 0, 0)";
-        wordColor = "rgb(114, 114, 114)";
+        selectedWordColor = "rgb(114, 114, 114)";
     }
 }
 
+// TODO: read from file made from midi
+//list of words for stage 3
+var wordList = [
+    'Object-oriented programming',
+    'abstraction',
+    'polymorphism',
+    'encapsulation',
+    'inheritance'
+];
+//sets all music to start time for stage 2
 for (var i = 0; i < 11; i++) {
     music[i][0].currentTime = music[i][1];
 }
-
-ctx.canvas.width = 2000;
-ctx.canvas.height = 1000;
-canvas.addEventListener('mousedown', click, true);
-canvas.addEventListener('mousemove', mouseCoord, false);
-window.addEventListener('keypress', keyboardInputTrue, false);
-// window.addEventListener('keyup', keyboardInputFalse, false);
-var play = 4;//start at 0
-
-var mouse = {
-    x: undefined,
-    y: undefined
-}
-var charValue = {};
+// TODO: read from directory
+//stoes music data
 var fileList = [
     ["Epic", "Disappear.mp3", "Two Steps From Hell", "2:59"],
     ["Epic", "Evergreen.mp3", "Two Steps From Hell", "3:02"],
@@ -69,27 +72,42 @@ var fileList = [
     ["Alternative", "Believer.mp3", "Imagine Dragons", "3:22"],
     ["Alternative", "Radioactive.mp3", "Imagine Dragons", "3:07"]
 ];
-var bgm = 0;
+var bgm = 0;//stores music selected from stage 2
+
+var ctx = canvas.getContext('2d');
+ctx.canvas.width = 2000;
+ctx.canvas.height = 1000;
+canvas.addEventListener('mousedown', click, true);
+canvas.addEventListener('mousemove', mouseCoord, false);
+
+//controls stages
+// 0 == start screen, 1 == list of music, music selection, 2 == game load, 3 == game play, 4 == end screen
+var play = 0;//start at 0
+var score = 0;
+
+var mouse = {
+    x: undefined,
+    y: undefined
+}
+
+//margin of error for stage 0,2,4
 var marginErrorHl = 250;
 var marginErrorH2 = 400;
 var marginErrorVl = 60;
 var marginErrorV2 = 270;
+//margin of error for stage 2
 var playButtonx = 1000;
 var playButtony = 500;
 var playButtonRadius = 200;
+//margin of error for stage 1
 var listXl = 100;
 var listXr = listXl + 1800;
 var listYt = 150;
 var listYb = listYt + 400;
-
+//margin of error for stage 4
 var backButtonx = 1300;
 var backButtony = 500;
 var backButtonRadius = 150;
-
-// Countdown timer (in seconds)
-var countdown = 0;
-// ID to track the setTimeout
-var id = null;
 
 function click(event) {
     x = event.clientX;
@@ -122,20 +140,8 @@ function mouseCoord(event) {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
 }
-function keyboardInputTrue(event) {
-    input = event.char || event.keycode || event.which;
-    // charValue = String.fromCharCode(input);
-    charValue[input] = true;
-    console.log("keyboard input: "+charValue);
-    console.log("keyboard input: "+String.fromCharCode(input));
-}
-function keyboardInputFalse(event) {
-    input = event.keycode || event.which;
-    // charValue = String.fromCharCode(input);
-    charValue[input] = false;
-    console.log("keyboard input: "+charValue);
-    console.log("keyboard input: "+String.fromCharCode(input));
-}
+
+//stage 0
 //start button
 function MorphingCircle(x, y, radius) {
     this.x = x;
@@ -252,7 +258,6 @@ function startButton(x, y) {
     ctx.textAlign = "center";
     ctx.fillText("START", x, y);
 }
-//start screen
 function StartScreen() {
     this.displayFile = function () {
         ctx.fillStyle = backgroundColor;
@@ -281,6 +286,7 @@ function StartScreen() {
 
     }
 }
+//stage 1
 function SelectList() {
     this.roundedRect = function (x, y) {
         var radius = 20;
@@ -352,136 +358,45 @@ function SelectList() {
         }
     }
 }
+//stage 2
 function playButton(x, y) {
     ctx.font = "50px Comic Sans MS";
     ctx.fillStyle = textColor;
     ctx.textAlign = "center";
     ctx.fillText("PLAY", x, y);
 }
-//game play
-function GamePlay(){
-    this.timer = -3; //set to 0
-    this.score = 0;
-    this.pre = 0;
-    this.currentPosition = 1;
-    this.status = this.currentPosition;
-    // this.status = this.currentPosition/fileList[bdm][3];
-    this.wordX = 130;
-    this.wordY = 260;
-    this.index = this.timer-1;
-    this.title = function(countDown){
-        if(countDown <= 0){
-            ctx.fillText(countDown, 650, 150);
-            ctx.fillText("COUNTDOWN:", 350, 150);
-        }else{
-            ctx.fillText(countDown, 500, 150);
-            ctx.fillText("START", 300, 150);
-        }
+//logics for stage 3
+function verifyInput(){
+    if(verifyCurrentWord()){
+        displayWord(wordList);
+        input.value = '';
+        score++;
     }
-    this.sheetMusic = function(x,y){
-        ctx.strokeStyle = "rgb(114, 114, 114)";
-        var lineY = y;
-        for(var i = 0; i < 5; i++){
-            ctx.moveTo(x, lineY+i*20);
-            ctx.lineTo(x+1800, lineY+i*20);
-        }
-        ctx.stroke();
-    }
-    this.words = function(words, timer, keyInput){
-        ctx.font = "70px Comic Sans MS";
-        ctx.textAlign = "center";
-        var x = 130;
-        var y = 260;
-        var ind = 0;
-        var row = 0;
-        var currentX;
-        var currentY;
-        
-        for(var i = 0; i < words.length; i++){
-            if(timer == i){
-                ctx.fillStyle = wordColor;
-                if(words.charAt(i) == '-')
-                    play = 4;
-                // if(words.charAt(i) == keyInput){
-                if(keyInput[words.charAt(i).charCodeAt(0)]){
-                    // if(this.pre != this.score){
-                        this.score++;
-                        // this.pre++;
-                    // }
-                    ctx.fillStyle = "rgb(100, 100, 100)";
-                    console.log("CORRECT INPUT: "+keyInput);
-                }
-            }else
-                ctx.fillStyle = textColor;
-            currentX = x+60*ind;
-            currentY = y+150*row
-            if(currentX < 1900){
-                ctx.fillText(words.charAt(i), currentX, currentY);
-            }else{
-                row++;
-                ind = -1;
-                i -= 1;
-            }
-            ind++;
-        }
-    }
-    this.wordsAnimation = function(words){ //not for use, replaced by this.word
-        ctx.font = "70px Comic Sans MS";
-        ctx.fillStyle = "rgb(0,0,0)";
-        ctx.textAlign = "center";
-
-        if(this.wordX < 1850){
-            this.index += 1;
-            this.wordX = 130+60*(this.index);
-            ctx.fillText(words[this.timer-1], this.wordX, this.wordY);
-        }else{
-            this.wordY += 150;
-            this.wordX = 130;
-            this.index = 0;
-            ctx.fillText(words[this.timer-1], this.wordX, this.wordY);
-        }
-    }
-    this.cursor = function(){ //not for use, replaced by this.word
-        ctx.fillStyle = "rgba(235, 137, 33, 0.5)";
-        ctx.fillRect(this.cursorX,this.cursorY, 50, 80);
-    }
-    this.cursorAnimation = function(){ //not for use, replaced by this.word
-        this.cursor();
-        if(this.cursorX >= 1800){
-            this.cursorX = 130;
-            this.cursorY += 150;
-        }else{
-            this.cursorX = 130+80*(this.timer);
-        }
-    }
-    this.background = function(){
-        ctx.font = "40px Comic Sans MS";
-        ctx.fillStyle = textColor;
-        ctx.textAlign = "center";
-        ctx.fillText(this.status + "%", 1600, 120);
-        // ctx.fillText("Score: " + this.score, 1800, 120);
-        ctx.fillText("Score: " + this.score, 200, 120);
-        var y = 200;
-        for(var i = 0; i < 5; i++){
-            this.sheetMusic(100, y+i*150);
-        }
-    }
-    this.update = function(words, countDown, keyInput){
-        this.background();
-        gamePlay.title(countDown);
-        if(countDown >= 0){
-            this.words(words, countDown,keyInput);
-        }
-    }
-    this.displayScore = function(){
-        ctx.font = "60px Comic Sans MS";
-        ctx.fillStyle = textColor;
-        ctx.textAlign = "left";
-        ctx.fillText("Your score:", 500, 400);
-        ctx.fillText("Score: " + this.score, 500, 500);
-    }
+    scoreDes.innerHTML = score;
 }
-//end score
+function verifyCurrentWord(){
+    console.log("inputs!!!!");
+    console.log(currentWord.innerHTML);
+    console.log(input.value);
+    if(input.value === currentWord.innerHTML)
+        return true;
+    else
+        return false;
+}
+//display to html
+function displayWord(words){
+    const rand = Math.floor(Math.random() * words.length);
+    currentWord.innerHTML = words[rand];
+    scoreDes.innerHTML = score;
+}
+//stage 4
+function displayScore(){
+    ctx.font = "60px Comic Sans MS";
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "left";
+    ctx.fillText("Your score", 500, 400);
+    ctx.fillText("Score: " + this.score, 500, 500);
+}
 function backButton(x, y) {
     ctx.font = "50px Comic Sans MS";
     ctx.fillStyle = textColor;
@@ -493,33 +408,27 @@ var startButtonCircle = new MorphingCircle (playButtonx, playButtony, playButton
 var backButtonCircle = new MorphingCircle (backButtonx, backButtony, backButtonRadius);
 var musicList = new StartScreen();
 var selectList = new SelectList();
-var gamePlay = new GamePlay(countdown);
 
-// Start the game
-function startGame() {
-    // Reduce the countdown timer ever second
-    id = setInterval(function () {
-        countdown++;
-    }, 1000)
-    animation();
+//display
+
+//displays the logic for html
+function logic(){
+    displayWord(wordList);
+    input.addEventListener('input', verifyInput);
 }
-
-// The main draw loop
-play = 0;
+//sets the end screen for html
+function end(){
+    play = 4;
+    console.log("ended!!!!");
+}
+//displays everything
 function animation(){
-    if (countdown < 0) {
-        clearInterval(id);
-        ctx.fillText('Time Remaining: ' + countdown, 100, 200);
-    } else {
-        window.requestAnimationFrame(animation);
-    }
-    
+    window.requestAnimationFrame(animation);
     theme();
-    // ctx.clearRect(0,0,2000, 1000);
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillText('Time Remaining: ' + countdown, 100, 100);
     if(play == 0){
+        paragraph.style.display="none";
         startButtonCircle.update();
         startButton(playButtonx, playButtony);
     }else if(play == 1){
@@ -530,19 +439,19 @@ function animation(){
         startButtonCircle.update();
         playButton(playButtonx, playButtony);
     }else if(play == 3){
-        // countdown = 0;
+        music[bgm][0].loop = false;
         music[bgm][0].play();
-        gamePlay.update("qwertyuiopasdfghjklzxcvbnm1234567890qwertyuiopasdfghjklzxcvbnm1234567890-", countdown, charValue);
+        paragraph.style.display="block";
+        canvas.style.display="none";
     }else if(play == 4){
+        canvas.style.display="inline";
+        paragraph.style.display="none";
         ctx.fillText('end', 100, 100);
         music[bgm][0].pause();
         backButtonCircle.update();
         backButton(backButtonx, backButtony);
-        gamePlay.displayScore();
+        displayScore();
     }
-    // startGame();
 }
-
-// Start the game
-startGame();
-// animation();
+//displays the graphics
+animation();

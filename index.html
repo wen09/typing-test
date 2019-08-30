@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="theme-dark">
+<html class="theme-light">
 	<head>
 		<title>typing-test</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--for responsive website-->
@@ -14,7 +14,7 @@
 					<!--introductions and play button-->
 					<li><a href="howTo.html"> how to play </a></li>
 					<li><a href="settingUp.html"> setting up </a></li>
-					<li><a href="listOfMusic.html"> list of music </a></li>
+					<li><a href="versions.html"> versions </a></li>
 					<li class="headTheme" style="border-radius:3px; margin-left:10px; margin-right:30px; padding-left:10px; padding-right:10px"><a class="headColorBackgroundTheme" href="index.html"> PLAY NOW </a></li>
 					<li><button class="changeTheme">dark/light</button></li>
 				</ul>
@@ -22,42 +22,50 @@
 		</header>	
 		<section>
 			<main id="main">
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Two Steps From Hell - Disappear.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Two Steps From Hell - Evergreen.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Pirates of the Caribbean 1 - He's a Pirate.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/米津玄師 - Lemon.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Jon Bellion - All Time Low.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Nightcore - Jack Sparrow.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Zella Day - East of Eden (Matstubs Remix).mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Linkin Park - Castle Of Glass (M. Shinoda Remix).mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/The Score - Strange.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Imagine Dragons - Believer.mp3" type="audio/mpeg">
 				</audio>
-				<audio>
+				<audio onplay="logic()" onended="end()">
 					<source src="music files/Imagine Dragons - Radioactive.mp3" type="audio/mpeg">
 				</audio>
-				<canvas id="canvas" style="border:1px solid #c3c3c3;" autofocus>
-					Your browser does not support the canvas element. rip...
+				<canvas id="canvas" style="border:1px solid #c3c3c3;  display:inline">
+					Your browser does not support the canvas element
 				</canvas>
+				<div class="game">
+					<div class="game">score: 
+						<span id="game" class="game score">0</span>
+					</div>
+					<br>
+					<div id="game" class="game currentWord">word</div><br>
+					<input type="text" id="game" class="game input" placeholder="Start typing..."autofocus>
+				</div>
 			</main>
 		</section>
 		<footer>
