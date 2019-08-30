@@ -50,12 +50,12 @@
 .theme-dark button{
 	color: rgb(114,114,114);
 	background:rgb(44, 44, 42);
-	border-color:rgb(92, 92, 90);
+	border-color:rgb(92, 92, 92);
 }
 
 .theme-dark button:hover{
 	background:rgb(92,92,90);
-	border-color:rgb(128, 128, 127);
+	border-color:rgb(128, 128, 128);
 }
 
 .theme-dark .mainTheme{
