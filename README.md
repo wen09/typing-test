@@ -1,2 +1,4 @@
 # typing-test
--todo: remove .vs from master
+-Next Step:
+-use mp3 and midi
+-http://midisheetmusic.com/songs.html
